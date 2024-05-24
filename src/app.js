@@ -20,6 +20,11 @@ const libroSchema = new mongoose.Schema({
 titulo: String,
 autor: String
 });
+
+app.get('/', function (req, res) {
+res.send("ingresaste tienda libros");
+});
+
 //crear nuevo libro
 const Libro = mongoose.model("Libro",libroSchema);
 app.post("/libro", async (req, res) => {
