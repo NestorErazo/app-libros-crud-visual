@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Libros</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Lista de Libros</h1>
+  <button onclick="openCreateModal()">Crear Libro</button>
+  <ul>
+    <% libros.forEach(libro => { %>
+      <li>
+        <strong>Título:</strong> <%= libro.titulo %> | <strong>Autor:</strong> <%= libro.autor %>
+        <button onclick="openViewModal('<%= libro.titulo %>', '<%= libro.autor %>')">Ver</button>
+        <button onclick="openEditModal('<%= libro._id %>', '<%= libro.titulo %>', '<%= libro.autor %>')">Editar</button>
+        <form action="/libros/<%= libro._id %>/eliminar" method="POST" style="display:inline;">
+          <button type="submit">Eliminar</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+
+  <!-- Modal para ver libro -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeViewModal()">&times;</span>
+      <h2>Ver Libro</h2>
+      <p><strong>Título:</strong> <span id="viewTitulo"></span></p>
+      <p><strong>Autor:</strong> <span id="viewAutor"></span></p>
+    </div>
+  </div>
+
+  <!-- Modal para editar libro -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditModal()">&times;</span>
+      <h2>Editar Libro</h2>
+      <form id="editForm" action="/libros/" method="POST">
+        <input type="hidden" id="libroId" name="libroId">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required>
+        <br>
+        <label for="autor">Autor:</label>
+        <input type="text" id="autor" name="autor" required>
+        <br>
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para crear libro -->
+  <div id="createModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCreateModal()">&times;</span>
+      <h2>Crear Libro</h2>
+      <form id="createForm" action="/libros" method="POST">
+        <label for="nuevoTitulo">Título:</label>
+        <input type="text" id="nuevoTitulo" name="titulo" required>
+        <br>
+        <label for="nuevoAutor">Autor:</label>
+        <input type="text" id="nuevoAutor" name="autor" required>
+        <br>
+        <button type="submit">Crear Libro</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openViewModal(titulo, autor) {
+      document.getElementById('viewTitulo').innerText = titulo;
+      document.getElementById('viewAutor').innerText = autor;
+      document.getElementById('viewModal').style.display = 'block';
+    }
+
+    function closeViewModal() {
+      document.getElementById('viewModal').style.display = 'none';
+    }
+
+    function openEditModal(id, titulo, autor) {
+      document.getElementById('libroId').value = id;
+      document.getElementById('titulo').value = titulo;
+      document.getElementById('autor').value = autor;
+      document.getElementById('editForm').action = '/libros/' + id;
+      document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    function openCreateModal() {
+      document.getElementById('createModal').style.display = 'block';
+    }
+
+    function closeCreateModal() {
+      document.getElementById('createModal').style.display = 'none';
+    }
+
+    // Cerrar el modal al hacer clic fuera de él
+    window.onclick = function(event) {
+      const viewModal = document.getElementById('viewModal');
+      const editModal = document.getElementById('editModal');
+      const createModal = document.getElementById('createModal');
+      if (event.target === viewModal) {
+        viewModal.style.display = 'none';
+      }
+      if (event.target === editModal) {
+        editModal.style.display = 'none';
+      }
+      if (event.target === createModal) {
+        createModal.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
